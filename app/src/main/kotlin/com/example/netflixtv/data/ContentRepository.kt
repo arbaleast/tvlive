@@ -4,7 +4,7 @@ import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ContentRepository(private val context: Context) {
+class ContentRepository(val context: Context, private val catalogName: String = "default") {
 
     private var cachedCategories: List<Category>? = null
 
@@ -15,7 +15,8 @@ class ContentRepository(private val context: Context) {
 
         val categories = mutableListOf<Category>()
         try {
-            val jsonText = readAsset("content_data.json")
+            val fileName = if (catalogName == "default") "content_data.json" else "content_data_$catalogName.json"
+            val jsonText = readAsset(fileName)
             val root = JSONObject(jsonText)
             val categoriesJson = root.optJSONArray("categories") ?: JSONArray()
             for (i in 0 until categoriesJson.length()) {
@@ -137,4 +138,6 @@ class ContentRepository(private val context: Context) {
             Category("Drama", drama)
         )
     }
+
+    fun getAvailableCatalogs(): List<String> = listOf("default", "v2")
 }

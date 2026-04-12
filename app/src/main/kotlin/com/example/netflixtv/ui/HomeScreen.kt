@@ -26,7 +26,9 @@ import com.example.netflixtv.data.ContentRepository
 fun HomeScreen(
     repository: ContentRepository,
     onContentClick: (Content) -> Unit,
-    onHeroCtaClick: (Content) -> Unit
+    onHeroCtaClick: (Content) -> Unit,
+    onSearchClick: () -> Unit = {},
+    onBrowseClick: () -> Unit = {}
 ) {
     val categories = remember { repository.loadCategories() }
     val heroContent = remember {
@@ -46,6 +48,39 @@ fun HomeScreen(
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "TV Live",
+                    color = Color.Red,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = "🔍",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        modifier = Modifier.focusable().padding(8.dp)
+                    )
+                    Text(
+                        text = "☰",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        modifier = Modifier.focusable().padding(8.dp)
+                    )
+                }
+            }
+        }
+
         heroContent?.let { hero ->
             item {
                 HeroBanner(

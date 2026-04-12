@@ -1,0 +1,38 @@
+{
+  "catalog": "v2",
+  "categories": [
+    {
+      "name": "Documentaries",
+      "items": [
+        {"id": "doc1", "title": "Ocean Depths", "description": "Exploring the deepest parts of our oceans.", "thumbnailUrl": "https://picsum.photos/seed/doc1/400/225", "backdropUrl": "https://picsum.photos/seed/doc1b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", "releaseYear": 2023, "rating": "PG", "duration": "1h 30m"},
+        {"id": "doc2", "title": "City Lights", "description": "Life in the world's greatest cities.", "thumbnailUrl": "https://picsum.photos/seed/doc2/400/225", "backdropUrl": "https://picsum.photos/seed/doc2b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", "releaseYear": 2022, "rating": "PG", "duration": "1h 45m"},
+        {"id": "doc3", "title": "Wild Planet", "description": "Animals in their natural habitat.", "thumbnailUrl": "https://picsum.photos/seed/doc3/400/225", "backdropUrl": "https://picsum.photos/seed/doc3b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", "releaseYear": 2024, "rating": "PG", "duration": "2h 0m"},
+        {"id": "doc4", "title": "Tech Revolution", "description": "How technology changed the world.", "thumbnailUrl": "https://picsum.photos/seed/doc4/400/225", "backdropUrl": "https://picsum.photos/seed/doc4b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", "releaseYear": 2023, "rating": "PG-13", "duration": "1h 55m"}
+      ]
+    },
+    {
+      "name": "Anime",
+      "items": [
+        {"id": "ani1", "title": "Cyber Runner", "description": "A futuristic action anime.", "thumbnailUrl": "https://picsum.photos/seed/ani1/400/225", "backdropUrl": "https://picsum.photos/seed/ani1b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", "releaseYear": 2024, "rating": "PG-13", "duration": "1h 50m"},
+        {"id": "ani2", "title": "Spirit Blade", "description": "Ancient spirits clash.", "thumbnailUrl": "https://picsum.photos/seed/ani2/400/225", "backdropUrl": "https://picsum.photos/seed/ani2b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", "releaseYear": 2023, "rating": "PG-13", "duration": "2h 05m"},
+        {"id": "ani3", "title": "Neon Dreams", "description": "A cyberpunk adventure.", "thumbnailUrl": "https://picsum.photos/seed/ani3/400/225", "backdropUrl": "https://picsum.photos/seed/ani3b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", "releaseYear": 2025, "rating": "PG-13", "duration": "1h 48m"}
+      ]
+    },
+    {
+      "name": "International",
+      "items": [
+        {"id": "int1", "title": "Paris Nights", "description": "A French romance.", "thumbnailUrl": "https://picsum.photos/seed/int1/400/225", "backdropUrl": "https://picsum.photos/seed/int1b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", "releaseYear": 2022, "rating": "PG-13", "duration": "1h 52m"},
+        {"id": "int2", "title": "Tokyo Story", "description": "A Japanese family drama.", "thumbnailUrl": "https://picsum.photos/seed/int2/400/225", "backdropUrl": "https://picsum.photos/seed/int2b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", "releaseYear": 2023, "rating": "PG", "duration": "2h 10m"},
+        {"id": "int3", "title": "Milan Style", "description": "Fashion meets mystery.", "thumbnailUrl": "https://picsum.photos/seed/int3/400/225", "backdropUrl": "https://picsum.photos/seed/int3b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubmarineReturn.mp4", "releaseYear": 2024, "rating": "PG-13", "duration": "1h 42m"}
+      ]
+    },
+    {
+      "name": "Originals",
+      "items": [
+        {"id": "org1", "title": "The Vault", "description": "Exclusive original series.", "thumbnailUrl": "https://picsum.photos/seed/org1/400/225", "backdropUrl": "https://picsum.photos/seed/org1b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", "releaseYear": 2025, "rating": "PG-13", "duration": "1h 55m"},
+        {"id": "org2", "title": "Hidden Truth", "description": "Something hidden is revealed.", "thumbnailUrl": "https://picsum.photos/seed/org2/400/225", "backdropUrl": "https://picsum.photos/seed/org2b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TheGirlWhoLeaptThroughTime.mp4", "releaseYear": 2024, "rating": "PG-13", "duration": "2h 05m"},
+        {"id": "org3", "title": "Last Horizon", "description": "The end is just the beginning.", "thumbnailUrl": "https://picsum.photos/seed/org3/400/225", "backdropUrl": "https://picsum.photos/seed/org3b/1920/1080", "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/CosmosLaidOver.mp4", "releaseYear": 2025, "rating": "PG-13", "duration": "1h 50m"}
+      ]
+    }
+  ]
+}

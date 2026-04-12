@@ -13,9 +13,13 @@ object Routes {
     const val HOME = "home"
     const val DETAIL = "detail/{contentId}"
     const val PLAYER = "player/{contentId}"
+    const val SEARCH = "search?query={query}"
+    const val BROWSE = "browse"
 
     fun detailRoute(contentId: String) = "detail/$contentId"
     fun playerRoute(contentId: String) = "player/$contentId"
+    fun searchRoute(query: String = "") = if (query.isNotEmpty()) "search?query=$query" else "search"
+    fun browseRoute() = BROWSE
 }
 
 @Composable
@@ -35,6 +39,12 @@ fun AppNav(
                 },
                 onHeroCtaClick = { content ->
                     navController.navigate(Routes.playerRoute(content.id))
+                },
+                onSearchClick = {
+                    navController.navigate(Routes.searchRoute())
+                },
+                onBrowseClick = {
+                    navController.navigate(Routes.browseRoute())
                 }
             )
         }
@@ -74,6 +84,36 @@ fun AppNav(
                     onBackClick = { navController.popBackStack() }
                 )
             }
+        }
+
+        composable(
+            route = Routes.SEARCH,
+            arguments = listOf(
+                navArgument("query") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
+        ) { backStackEntry ->
+            val query = backStackEntry.arguments?.getString("query") ?: ""
+            SearchScreen(
+                repository = repository,
+                initialQuery = query,
+                onContentClick = { content ->
+                    navController.navigate(Routes.detailRoute(content.id))
+                },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.BROWSE) {
+            BrowseScreen(
+                repository = repository,
+                onContentClick = { content ->
+                    navController.navigate(Routes.detailRoute(content.id))
+                },
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }
