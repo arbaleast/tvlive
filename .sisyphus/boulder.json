@@ -1,0 +1,13 @@
+{
+  "active_plan": "/vol1/1000/projects/tvlive/.sisyphus/plans/netflix-clone-progress.md",
+  "started_at": "2026-04-12T15:59:22.886Z",
+  "completed_at": "2026-04-13T00:15:00.000Z",
+  "session_ids": [
+    "ses_27d9f57d4ffe8OPDNmdNTwrjRI",
+    "ses_27d93e7f6ffew8i1IymlTmfa6x"
+  ],
+  "plan_name": "netflix-clone-progress",
+  "agent": "atlas",
+  "task_sessions": {},
+  "status": "completed"
+}
