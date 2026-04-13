@@ -68,12 +68,25 @@ fun BrowseScreen(
         ) {
             item {
                 Column {
-                    Text(
-                        text = "Browse",
-                        color = Color.White,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "← Back",
+                            color = Color.Gray,
+                            fontSize = 16.sp,
+                            modifier = Modifier.clickable { onBackClick() }
+                        )
+                        Text(
+                            text = "Browse",
+                            color = Color.White,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(60.dp))
+                    }
 
                     Spacer(modifier = Modifier.height(12.dp))
 

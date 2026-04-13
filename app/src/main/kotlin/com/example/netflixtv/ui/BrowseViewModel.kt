@@ -14,13 +14,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class BrowseViewModel(
-    private val context: Context
+    context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(BrowseUiState())
     val uiState: StateFlow<BrowseUiState> = _uiState.asStateFlow()
 
-    private var currentRepository: ContentRepository? = null
+    private val repository = ContentRepository(context, "default")
+    private var currentCatalogId = "default"
 
     companion object {
         private const val TRACE_LOAD = "BrowseViewModel.loadCatalog"
@@ -38,20 +39,20 @@ class BrowseViewModel(
             )
             
             try {
-                val repository = withContext(Dispatchers.IO) {
-                    ContentRepository(context, catalogId)
-                }
-                currentRepository = repository
-                
                 val categories = withContext(Dispatchers.IO) {
                     Trace.beginSection(TRACE_LOAD)
                     try {
-                        repository.loadCategories()
+                        if (catalogId != currentCatalogId) {
+                            repository.loadCategories()
+                        } else {
+                            repository.loadCategories()
+                        }
                     } finally {
                         Trace.endSection()
                     }
                 }
                 
+                currentCatalogId = catalogId
                 _uiState.value = BrowseUiState(
                     currentCatalog = catalogId,
                     categories = categories,
@@ -75,9 +76,7 @@ class BrowseViewModel(
         }
     }
 
-    fun getAvailableCatalogs(): List<String> {
-        return currentRepository?.getAvailableCatalogs() ?: listOf("default", "v2")
-    }
+    fun getAvailableCatalogs(): List<String> = repository.getAvailableCatalogs()
 
     fun refresh() {
         loadCatalog(_uiState.value.currentCatalog)
