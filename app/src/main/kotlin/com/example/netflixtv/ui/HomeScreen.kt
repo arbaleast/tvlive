@@ -1,14 +1,16 @@
 package com.example.netflixtv.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +38,12 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val firstCardFocusRequester = remember { FocusRequester() }
+
+    val searchInteractionSource = remember { MutableInteractionSource() }
+    val isSearchFocused by searchInteractionSource.collectIsFocusedAsState()
+
+    val menuInteractionSource = remember { MutableInteractionSource() }
+    val isMenuFocused by menuInteractionSource.collectIsFocusedAsState()
 
     if (uiState.isLoading) {
         Box(
@@ -73,7 +81,8 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "TV Live",
@@ -82,23 +91,45 @@ fun HomeScreen(
                     fontWeight = FontWeight.Bold
                 )
 
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(
-                        text = "🔍",
-                        color = Color.White,
-                        fontSize = 16.sp,
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Box(
                         modifier = Modifier
-                            .clickable { onSearchClick() }
-                            .padding(8.dp)
-                    )
-                    Text(
-                        text = "☰",
-                        color = Color.White,
-                        fontSize = 16.sp,
+                            .size(40.dp)
+                            .then(
+                                if (isSearchFocused) {
+                                    Modifier.border(2.dp, Color.Red, RoundedCornerShape(8.dp))
+                                } else Modifier
+                            )
+                            .background(if (isSearchFocused) Color.Red.copy(alpha = 0.2f) else Color.Transparent)
+                            .focusable(interactionSource = searchInteractionSource),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "🔍",
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
+
+                    Box(
                         modifier = Modifier
-                            .clickable { onBrowseClick() }
-                            .padding(8.dp)
-                    )
+                            .size(40.dp)
+                            .then(
+                                if (isMenuFocused) {
+                                    Modifier.border(2.dp, Color.Red, RoundedCornerShape(8.dp))
+                                } else Modifier
+                            )
+                            .background(if (isMenuFocused) Color.Red.copy(alpha = 0.2f) else Color.Transparent)
+                            .focusable(interactionSource = menuInteractionSource),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "☰",
+                            color = if (isMenuFocused) Color.Red else Color.White,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
                 }
             }
         }
@@ -132,8 +163,6 @@ private fun HomeCategoryRow(
     isFirstRow: Boolean,
     firstCardFocusRequester: FocusRequester
 ) {
-    val listState = rememberLazyListState()
-
     Column {
         Text(
             text = category.name,
@@ -144,18 +173,18 @@ private fun HomeCategoryRow(
         )
 
         LazyRow(
-            state = listState,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             items(
                 items = category.items,
-                key = { it.id }
+                key = { it.id },
+                contentType = { "NetflixCard" }
             ) { content ->
                 NetflixCard(
                     content = content,
                     onClick = { onContentClick(content) },
-                    modifier = if (isFirstRow && category.items.indexOf(content) == 0) {
+                    modifier = if (isFirstRow && category.items.firstOrNull()?.id == content.id) {
                         Modifier.focusRequester(firstCardFocusRequester)
                     } else {
                         Modifier

@@ -1,12 +1,18 @@
 package com.example.netflixtv.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -27,12 +33,17 @@ fun HeroBanner(
     onCtaClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val playInteractionSource = remember { MutableInteractionSource() }
+    val isPlayFocused by playInteractionSource.collectIsFocusedAsState()
+
+    val moreInfoInteractionSource = remember { MutableInteractionSource() }
+    val isMoreInfoFocused by moreInfoInteractionSource.collectIsFocusedAsState()
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(400.dp)
     ) {
-        // Backdrop image
         AsyncImage(
             model = imageUrl,
             contentDescription = title,
@@ -42,7 +53,6 @@ fun HeroBanner(
             error = ColorPainter(Color.Black)
         )
 
-        // Gradient overlays for text readability
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -51,14 +61,11 @@ fun HeroBanner(
                         colors = listOf(
                             Color.Transparent,
                             Color.Black.copy(alpha = 0.7f)
-                        ),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
+                        )
                     )
                 )
         )
 
-        // Left gradient for title area
         Box(
             modifier = Modifier
                 .fillMaxHeight()
@@ -73,7 +80,6 @@ fun HeroBanner(
                 )
         )
 
-        // Content
         Column(
             modifier = Modifier
                 .align(Alignment.CenterStart)
@@ -103,37 +109,67 @@ fun HeroBanner(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Button(
-                    onClick = onCtaClick,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red
-                    ),
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Box(
                     modifier = Modifier
-                        .focusable()
-                        .padding(0.dp)
+                        .then(
+                            if (isPlayFocused) {
+                                Modifier.border(
+                                    width = 4.dp,
+                                    color = Color.Red,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                            } else Modifier
+                        )
+                        .padding(3.dp)
                 ) {
-                    Text(
-                        text = "▶ Play",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Button(
+                        onClick = onCtaClick,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Red
+                        ),
+                        modifier = Modifier
+                            .focusable(interactionSource = playInteractionSource),
+                        interactionSource = playInteractionSource
+                    ) {
+                        Text(
+                            text = "▶ Play",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 }
 
-                Button(
-                    onClick = { /* Info */ },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Gray.copy(alpha = 0.7f)
-                    ),
-                    modifier = Modifier.focusable()
+                Box(
+                    modifier = Modifier
+                        .then(
+                            if (isMoreInfoFocused) {
+                                Modifier.border(
+                                    width = 4.dp,
+                                    color = Color.Red,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                            } else Modifier
+                        )
+                        .padding(3.dp)
                 ) {
-                    Text(
-                        text = "ℹ More Info",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Button(
+                        onClick = {},
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Gray.copy(alpha = 0.7f)
+                        ),
+                        modifier = Modifier
+                            .focusable(interactionSource = moreInfoInteractionSource),
+                        interactionSource = moreInfoInteractionSource
+                    ) {
+                        Text(
+                            text = "ℹ More Info",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }
