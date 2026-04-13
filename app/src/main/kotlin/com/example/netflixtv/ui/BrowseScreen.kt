@@ -2,6 +2,7 @@ package com.example.netflixtv.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -84,11 +85,11 @@ fun BrowseScreen(
                                     .clip(RoundedCornerShape(20.dp))
                                     .background(if (isSelected) Color.Red else Color.DarkGray)
                                     .border(1.dp, if (isSelected) Color.Red else Color.Gray, RoundedCornerShape(20.dp))
+                                    .clickable(enabled = !uiState.catalogSwitchInProgress) {
+                                        viewModel.switchCatalog(catalog)
+                                    }
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
                                     .focusable()
-                                    .let { mod ->
-                                        if (isSelected) mod else mod
-                                    }
                             ) {
                                 Text(
                                     text = catalog.uppercase(),
