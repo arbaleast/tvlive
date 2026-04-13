@@ -103,8 +103,7 @@ fun AppNav(
                     defaultValue = ""
                 }
             )
-        ) { backStackEntry ->
-            val query = backStackEntry.arguments?.getString("query") ?: ""
+        ) {
             SearchScreen(
                 viewModel = searchViewModel,
                 onContentClick = { content ->
