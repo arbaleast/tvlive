@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import androidx.compose.ui.graphics.painter.ColorPainter
 
 @Composable
 fun HeroBanner(
@@ -36,7 +37,9 @@ fun HeroBanner(
             model = imageUrl,
             contentDescription = title,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholder = ColorPainter(Color.Black),
+            error = ColorPainter(Color.Black)
         )
 
         // Gradient overlays for text readability

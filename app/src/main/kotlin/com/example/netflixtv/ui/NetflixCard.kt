@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import androidx.compose.ui.graphics.painter.ColorPainter
 import com.example.netflixtv.data.Content
 
 @Composable
@@ -73,7 +74,9 @@ fun NetflixCard(
                 model = content.thumbnailUrl,
                 contentDescription = content.title,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = ColorPainter(Color.DarkGray),
+                error = ColorPainter(Color.DarkGray)
             )
 
             Box(
