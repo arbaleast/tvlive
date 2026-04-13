@@ -27,6 +27,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
+import androidx.compose.ui.graphics.painter.ColorPainter
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -91,7 +92,9 @@ fun PlayerScreen(
             contentDescription = title,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
-            alpha = if (isPlaying) 0f else 0.3f
+            alpha = if (isPlaying) 0f else 0.3f,
+            placeholder = ColorPainter(Color.Black),
+            error = ColorPainter(Color.Black)
         )
 
         Row(

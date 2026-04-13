@@ -86,13 +86,17 @@ fun HomeScreen(
                         text = "🔍",
                         color = Color.White,
                         fontSize = 16.sp,
-                        modifier = Modifier.focusable().padding(8.dp)
+                        modifier = Modifier
+                            .focusable()
+                            .padding(8.dp)
                     )
                     Text(
                         text = "☰",
                         color = Color.White,
                         fontSize = 16.sp,
-                        modifier = Modifier.focusable().padding(8.dp)
+                        modifier = Modifier
+                            .focusable()
+                            .padding(8.dp)
                     )
                 }
             }

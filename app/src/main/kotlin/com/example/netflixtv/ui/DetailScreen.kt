@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import androidx.compose.ui.graphics.painter.ColorPainter
 import com.example.netflixtv.data.Content
 
 @Composable
@@ -33,7 +34,9 @@ fun DetailScreen(
             contentDescription = content.title,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
-            alpha = 0.5f
+            alpha = 0.5f,
+            placeholder = ColorPainter(Color.Black),
+            error = ColorPainter(Color.Black)
         )
 
         Button(
