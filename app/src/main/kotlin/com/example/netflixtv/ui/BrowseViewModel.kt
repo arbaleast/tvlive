@@ -1,10 +1,10 @@
 package com.example.netflixtv.ui
 
 import android.content.Context
+import android.os.Trace
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.netflixtv.data.BrowseUiState
-import com.example.netflixtv.data.Category
 import com.example.netflixtv.data.ContentRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +21,10 @@ class BrowseViewModel(
     val uiState: StateFlow<BrowseUiState> = _uiState.asStateFlow()
 
     private var currentRepository: ContentRepository? = null
+
+    companion object {
+        private const val TRACE_LOAD = "BrowseViewModel.loadCatalog"
+    }
 
     init {
         loadCatalog("default")
@@ -40,7 +44,12 @@ class BrowseViewModel(
                 currentRepository = repository
                 
                 val categories = withContext(Dispatchers.IO) {
-                    repository.loadCategories()
+                    Trace.beginSection(TRACE_LOAD)
+                    try {
+                        repository.loadCategories()
+                    } finally {
+                        Trace.endSection()
+                    }
                 }
                 
                 _uiState.value = BrowseUiState(

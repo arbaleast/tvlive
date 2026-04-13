@@ -1,16 +1,19 @@
 package com.example.netflixtv.ui
 
+import android.os.Trace
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.netflixtv.data.Content
 import com.example.netflixtv.data.ContentRepository
 import com.example.netflixtv.data.SearchUiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     private val repository: ContentRepository
@@ -24,6 +27,7 @@ class SearchViewModel(
 
     companion object {
         private const val DEBOUNCE_MS = 250L
+        private const val TRACE_SEARCH = "SearchViewModel.search"
     }
 
     init {
@@ -48,7 +52,6 @@ class SearchViewModel(
     fun onQueryChange(query: String) {
         _uiState.value = _uiState.value.copy(query = query)
         
-        // Cancel previous search job
         searchJob?.cancel()
         
         if (query.isBlank()) {
@@ -56,12 +59,18 @@ class SearchViewModel(
             return
         }
         
-        // Debounce search
         searchJob = viewModelScope.launch {
             delay(DEBOUNCE_MS)
             _uiState.value = _uiState.value.copy(isSearching = true)
             
-            val results = allContent.filter { it.title.contains(query, ignoreCase = true) }
+            val results = withContext(kotlinx.coroutines.Dispatchers.Default) {
+                Trace.beginSection(TRACE_SEARCH)
+                try {
+                    allContent.filter { it.title.contains(query, ignoreCase = true) }
+                } finally {
+                    Trace.endSection()
+                }
+            }
             
             _uiState.value = _uiState.value.copy(
                 results = results,

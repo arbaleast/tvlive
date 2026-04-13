@@ -1,9 +1,8 @@
 package com.example.netflixtv.ui
 
+import android.os.Trace
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.netflixtv.data.Category
-import com.example.netflixtv.data.Content
 import com.example.netflixtv.data.ContentRepository
 import com.example.netflixtv.data.HomeUiState
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +19,10 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    companion object {
+        private const val TRACE_SECTION = "HomeViewModel.loadData"
+    }
+
     init {
         loadData()
     }
@@ -29,7 +32,12 @@ class HomeViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             try {
                 val categories = withContext(Dispatchers.IO) {
-                    repository.loadCategories()
+                    Trace.beginSection(TRACE_SECTION)
+                    try {
+                        repository.loadCategories()
+                    } finally {
+                        Trace.endSection()
+                    }
                 }
                 val heroes = categories.firstOrNull()?.items?.take(5) ?: emptyList()
                 _uiState.value = HomeUiState(
