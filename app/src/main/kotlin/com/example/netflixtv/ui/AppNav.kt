@@ -1,6 +1,10 @@
 package com.example.netflixtv.ui
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -24,16 +28,21 @@ object Routes {
 
 @Composable
 fun AppNav(
-    repository: ContentRepository,
+    context: Context,
     navController: NavHostController = rememberNavController()
 ) {
+    val repository = remember { ContentRepository(context, "default") }
+    val homeViewModel: HomeViewModel = viewModel { HomeViewModel(repository) }
+    val browseViewModel: BrowseViewModel = viewModel { BrowseViewModel(context) }
+    val searchViewModel: SearchViewModel = viewModel { SearchViewModel(repository) }
+
     NavHost(
         navController = navController,
         startDestination = Routes.HOME
     ) {
         composable(Routes.HOME) {
             HomeScreen(
-                repository = repository,
+                viewModel = homeViewModel,
                 onContentClick = { content ->
                     navController.navigate(Routes.detailRoute(content.id))
                 },
@@ -56,7 +65,7 @@ fun AppNav(
             )
         ) { backStackEntry ->
             val contentId = backStackEntry.arguments?.getString("contentId") ?: ""
-            val content = repository.getContentById(contentId)
+            val content = repository.getContentByIdSync(contentId)
 
             content?.let {
                 DetailScreen(
@@ -74,7 +83,7 @@ fun AppNav(
             )
         ) { backStackEntry ->
             val contentId = backStackEntry.arguments?.getString("contentId") ?: ""
-            val content = repository.getContentById(contentId)
+            val content = repository.getContentByIdSync(contentId)
 
             content?.let {
                 PlayerScreen(
@@ -97,8 +106,7 @@ fun AppNav(
         ) { backStackEntry ->
             val query = backStackEntry.arguments?.getString("query") ?: ""
             SearchScreen(
-                repository = repository,
-                initialQuery = query,
+                viewModel = searchViewModel,
                 onContentClick = { content ->
                     navController.navigate(Routes.detailRoute(content.id))
                 },
@@ -108,7 +116,7 @@ fun AppNav(
 
         composable(Routes.BROWSE) {
             BrowseScreen(
-                repository = repository,
+                viewModel = browseViewModel,
                 onContentClick = { content ->
                     navController.navigate(Routes.detailRoute(content.id))
                 },

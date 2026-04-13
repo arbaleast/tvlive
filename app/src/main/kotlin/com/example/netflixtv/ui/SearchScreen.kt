@@ -6,14 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -23,25 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.netflixtv.data.Content
-import com.example.netflixtv.data.ContentRepository
 
 @Composable
 fun SearchScreen(
-    repository: ContentRepository,
-    initialQuery: String = "",
+    viewModel: SearchViewModel,
     onContentClick: (Content) -> Unit,
     onBackClick: () -> Unit
 ) {
-    var searchQuery by remember { mutableStateOf(initialQuery) }
-    val allContent = remember { repository.getAllContent() }
-    val filteredContent = remember(searchQuery) {
-        if (searchQuery.isBlank()) {
-            emptyList()
-        } else {
-            allContent.filter { it.title.contains(searchQuery, ignoreCase = true) }
-        }
-    }
-
+    val uiState by viewModel.uiState.collectAsState()
     val inputFocusRequester = remember { FocusRequester() }
 
     Box(
@@ -62,8 +51,8 @@ fun SearchScreen(
             )
 
             TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = uiState.query,
+                onValueChange = { viewModel.onQueryChange(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(inputFocusRequester),
@@ -82,14 +71,21 @@ fun SearchScreen(
                 )
             )
 
-            if (searchQuery.isNotBlank()) {
+            if (uiState.isSearching) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color.Red)
+                }
+            } else if (uiState.query.isNotBlank()) {
                 Text(
-                    text = "${filteredContent.size} results",
+                    text = "${uiState.results.size} results",
                     color = Color.Gray,
                     fontSize = 14.sp
                 )
 
-                if (filteredContent.isEmpty()) {
+                if (uiState.results.isEmpty()) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -106,7 +102,10 @@ fun SearchScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(filteredContent) { content ->
+                        items(
+                            items = uiState.results,
+                            key = { it.id }
+                        ) { content ->
                             NetflixCard(
                                 content = content,
                                 onClick = { onContentClick(content) }

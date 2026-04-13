@@ -1,6 +1,8 @@
 package com.example.netflixtv.data
 
 import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -8,55 +10,63 @@ class ContentRepository(val context: Context, private val catalogName: String = 
 
     private var cachedCategories: List<Category>? = null
 
-    fun loadCategories(): List<Category> {
+    suspend fun loadCategories(): List<Category> {
         cachedCategories?.let { return it }
-
-        val fallback = buildFallbackCategories()
-
-        val categories = mutableListOf<Category>()
-        try {
-            val fileName = if (catalogName == "default") "content_data.json" else "content_data_$catalogName.json"
-            val jsonText = readAsset(fileName)
-            val root = JSONObject(jsonText)
-            val categoriesJson = root.optJSONArray("categories") ?: JSONArray()
-            for (i in 0 until categoriesJson.length()) {
-                val catObj = categoriesJson.getJSONObject(i)
-                val name = catObj.optString("name")
-                val itemsJson = catObj.optJSONArray("items") ?: JSONArray()
-                val items = mutableListOf<Content>()
-                for (j in 0 until itemsJson.length()) {
-                    val itemObj = itemsJson.getJSONObject(j)
-                    val content = Content(
-                        id = itemObj.optString("id"),
-                        title = itemObj.optString("title"),
-                        description = itemObj.optString("description"),
-                        thumbnailUrl = itemObj.optString("thumbnailUrl"),
-                        backdropUrl = itemObj.optString("backdropUrl", itemObj.optString("thumbnailUrl")),
-                        videoUrl = itemObj.optString("videoUrl"),
-                        category = name,
-                        releaseYear = itemObj.optInt("releaseYear"),
-                        rating = itemObj.optString("rating"),
-                        duration = itemObj.optString("duration")
-                    )
-                    items.add(content)
+        return withContext(Dispatchers.IO) {
+            cachedCategories?.let { return@withContext it }
+            val fallback = buildFallbackCategories()
+            val categories = mutableListOf<Category>()
+            try {
+                val fileName = if (catalogName == "default") "content_data.json" else "content_data_$catalogName.json"
+                val jsonText = readAsset(fileName)
+                val root = JSONObject(jsonText)
+                val categoriesJson = root.optJSONArray("categories") ?: JSONArray()
+                for (i in 0 until categoriesJson.length()) {
+                    val catObj = categoriesJson.getJSONObject(i)
+                    val name = catObj.optString("name")
+                    val itemsJson = catObj.optJSONArray("items") ?: JSONArray()
+                    val items = mutableListOf<Content>()
+                    for (j in 0 until itemsJson.length()) {
+                        val itemObj = itemsJson.getJSONObject(j)
+                        val content = Content(
+                            id = itemObj.optString("id"),
+                            title = itemObj.optString("title"),
+                            description = itemObj.optString("description"),
+                            thumbnailUrl = itemObj.optString("thumbnailUrl"),
+                            backdropUrl = itemObj.optString("backdropUrl", itemObj.optString("thumbnailUrl")),
+                            videoUrl = itemObj.optString("videoUrl"),
+                            category = name,
+                            releaseYear = itemObj.optInt("releaseYear"),
+                            rating = itemObj.optString("rating"),
+                            duration = itemObj.optString("duration")
+                        )
+                        items.add(content)
+                    }
+                    categories.add(Category(name, items))
                 }
-                categories.add(Category(name, items))
+                cachedCategories = if (categories.isNotEmpty()) categories else fallback
+            } catch (e: Exception) {
+                cachedCategories = fallback
             }
-
-            cachedCategories = if (categories.isNotEmpty()) categories else fallback
-        } catch (e: Exception) {
-            cachedCategories = fallback
+            cachedCategories!!
         }
-
-        return cachedCategories!!
     }
 
-    fun getAllContent(): List<Content> = loadCategories().flatMap { it.items }
+    suspend fun getAllContent(): List<Content> = loadCategories().flatMap { it.items }
 
-    fun getItemsByCategory(categoryName: String): List<Content> =
+    suspend fun getItemsByCategory(categoryName: String): List<Content> =
         loadCategories().firstOrNull { it.name.equals(categoryName, ignoreCase = true) }?.items ?: emptyList()
 
-    fun getContentById(id: String): Content? = getAllContent().firstOrNull { it.id == id }
+    suspend fun getContentById(id: String): Content? = getAllContent().firstOrNull { it.id == id }
+
+    fun getContentByIdSync(id: String): Content? {
+        return cachedCategories?.flatMap { it.items }?.firstOrNull { it.id == id }
+            ?: getAllContentSync().firstOrNull { it.id == id }
+    }
+
+    private fun getAllContentSync(): List<Content> {
+        return cachedCategories?.flatMap { it.items } ?: buildFallbackCategories().flatMap { it.items }
+    }
 
     private fun readAsset(fileName: String): String {
         return context.assets.open(fileName).bufferedReader().use { it.readText() }
