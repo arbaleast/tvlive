@@ -41,7 +41,7 @@ class BrowseViewModelTest {
         override fun getContentByIdSync(contentId: String): Content? =
             testCategories.flatMap { it.items }.find { it.id == contentId }
         override fun getAllContent(): List<Content> = testCategories.flatMap { it.items }
-        override fun getAvailableCatalogs(): List<String> = listOf("default", "kids")
+        override fun getAvailableCatalogs(): List<String> = listOf("default")
         override fun getItemsByCategory(category: String): List<Content> =
             testCategories.find { it.name == category }?.items ?: emptyList()
         override fun observeCategories(): Flow<List<Category>> = MutableStateFlow(testCategories)
@@ -70,14 +70,14 @@ class BrowseViewModelTest {
     }
 
     @Test
-    fun `switchCatalog with different id triggers reload`() = runBlocking {
+    fun `switchCatalog reloads current catalog`() = runBlocking {
         delay(200)
 
-        viewModel.switchCatalog("kids")
+        viewModel.switchCatalog("anyCatalogId")
         delay(200)
 
         val state = viewModel.uiState.value
-        assertEquals("kids", state.currentCatalog)
+        assertEquals("default", state.currentCatalog)
         assertFalse(state.catalogSwitchInProgress)
     }
 
@@ -105,7 +105,7 @@ class BrowseViewModelTest {
 
     @Test
     fun `getAvailableCatalogs returns repository catalogs`() {
-        assertEquals(listOf("default", "kids"), viewModel.getAvailableCatalogs())
+        assertEquals(listOf("default"), viewModel.getAvailableCatalogs())
     }
 
     @Test

@@ -55,7 +55,7 @@ tvlive/
 - **Language**: Kotlin 1.9.20
 - **UI**: Jetpack Compose + Compose for TV (androidx.tv:tv-foundation, tv-material)
 - **Min SDK**: 21 | **Target SDK**: 34
-- **Gradle**: 8.5 | **AGP**: 8.2.0 | **Compose Compiler**: 1.5.4
+- **Gradle**: 8.5 | **AGP**: 8.2.0 | **Compose Compiler**: 1.5.10
 - **Compose BOM**: 2023.10.01
 - **Media3/ExoPlayer**: 1.2.0
 

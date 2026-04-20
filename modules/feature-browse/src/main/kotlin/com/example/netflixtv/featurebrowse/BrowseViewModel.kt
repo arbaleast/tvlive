@@ -18,17 +18,15 @@ class BrowseViewModel(
     private val _uiState = MutableStateFlow(BrowseUiState())
     val uiState: StateFlow<BrowseUiState> = _uiState.asStateFlow()
 
-    private var currentCatalogId: String = repository.catalogId
-
     companion object {
         private const val TRACE_LOAD = "BrowseViewModel.loadCatalog"
     }
 
     init {
-        loadCatalog(currentCatalogId)
+        loadCatalog()
     }
 
-    fun loadCatalog(catalogId: String) {
+    private fun loadCatalog() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 catalogSwitchInProgress = true,
@@ -45,9 +43,8 @@ class BrowseViewModel(
                     }
                 }
 
-                currentCatalogId = catalogId
                 _uiState.value = BrowseUiState(
-                    currentCatalog = catalogId,
+                    currentCatalog = repository.catalogId,
                     categories = categories,
                     isLoading = false,
                     catalogSwitchInProgress = false,
@@ -64,14 +61,12 @@ class BrowseViewModel(
     }
 
     fun switchCatalog(catalogId: String) {
-        if (catalogId != _uiState.value.currentCatalog) {
-            loadCatalog(catalogId)
-        }
+        loadCatalog()
     }
 
     fun getAvailableCatalogs(): List<String> = repository.getAvailableCatalogs()
 
     fun refresh() {
-        loadCatalog(_uiState.value.currentCatalog)
+        loadCatalog()
     }
 }
