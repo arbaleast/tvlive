@@ -1,5 +1,7 @@
 # AGENTS.md — Project Standards
 
+Generated: 2026-04-20
+
 ## Identity
 
 | Field | Value |
@@ -29,60 +31,55 @@ ANDROID_HOME=/home/al/Android/Sdk ./gradlew assembleRelease
 ./gradlew clean
 ```
 
-## Project Knowledge
-
-### File Structure
+## File Structure
 
 ```
 tvlive/
-├── app/                          # Main application module
-│   ├── build.gradle.kts           # App-level build config with Compose TV deps
-│   ├── proguard-rules.pro         # ProGuard rules
-│   └── src/main/
-│       ├── AndroidManifest.xml    # TV manifest (Leanback launcher)
-│       ├── java/com/tvlive/app/
-│       │   └── MainActivity.kt   # Main entry point with Compose TV UI
-│       └── res/
-│           ├── drawable/         # App icon (vector)
-│           └── values/           # strings, themes (Leanback)
-├── build.gradle.kts               # Root build config (AGP 8.2.0, Kotlin 1.9.20)
-├── settings.gradle.kts            # Project settings
-├── gradle.properties             # AndroidX, Jetifier enabled
-├── gradlew / gradlew.bat         # Gradle wrapper scripts
-├── gradle/wrapper/               # Gradle wrapper (8.5)
+├── app/                          # Main application (MainActivity, AppNav)
+├── modules/
+│   ├── data/                     # Content, ContentRepository, Category
+│   ├── ui-common/                # NetflixCard, TvliveTheme, Routes, DpadFocusable
+│   ├── media/                    # PlayerManager (ExoPlayer + HLS)
+│   ├── feature-home/             # HomeScreen, HomeViewModel
+│   ├── feature-browse/           # BrowseScreen, BrowseViewModel
+│   ├── feature-detail/           # DetailScreen
+│   ├── feature-player/          # PlayerScreen
+│   └── feature-search/          # SearchScreen, SearchViewModel
+├── build.gradle.kts              # Root build (AGP 8.2.0, Kotlin 1.9.20)
+├── settings.gradle.kts           # Aliyun Maven mirror
 └── AGENTS.md
 ```
 
-### Framework & Versions
+## Framework & Versions
 
 - **Language**: Kotlin 1.9.20
 - **UI**: Jetpack Compose + Compose for TV (androidx.tv:tv-foundation, tv-material)
-- **Min SDK**: 21 (Android 5.0 Lollipop)
-- **Target SDK**: 34
-- **Gradle**: 8.5 (Kotlin DSL)
-- **Android Gradle Plugin**: 8.2.0
-- **Compose Compiler**: 1.5.4
+- **Min SDK**: 21 | **Target SDK**: 34
+- **Gradle**: 8.5 | **AGP**: 8.2.0 | **Compose Compiler**: 1.5.4
+- **Compose BOM**: 2023.10.01
+- **Media3/ExoPlayer**: 1.2.0
 
-### Key Dependencies
+## Where To Look
 
-- **Compose BOM**: 2023.10.01 (ui, material3, foundation, runtime)
-- **TV Foundation**: androidx.tv:tv-foundation:1.0.0-alpha05
-- **TV Material**: androidx.tv:tv-material:1.0.0-alpha05
-- **Navigation**: androidx.navigation:navigation-compose:2.7.5
-- **Media3/ExoPlayer**: androidx.media3:media3-exoplayer:1.2.0, media3-ui:1.2.0
-- **Lifecycle**: lifecycle-viewmodel-compose, lifecycle-runtime-compose:2.6.2
+| Need | Look In |
+|------|---------|
+| TV manifest / Leanback launcher | `app/src/main/AndroidManifest.xml` |
+| Colors / Theme | `modules/ui-common/.../TvliveTheme.kt` |
+| Content data models | `modules/data/.../Content.kt` |
+| Media playback (HLS) | `modules/media/.../PlayerManager.kt` |
+| Home screen | `modules/feature-home/...` |
+| Browse screen | `modules/feature-browse/...` |
+| Detail screen | `modules/feature-detail/...` |
+| Player screen | `modules/feature-player/...` |
+| Search screen | `modules/feature-search/...` |
+| D-pad navigation (focusable) | `modules/ui-common/.../DpadFocusable.kt` |
+| Navigation routes | `modules/ui-common/.../Routes.kt` |
+| Sample content | `app/src/main/assets/content_data.json` |
 
-### Maven Repository Configuration
+## TV-Specific Configuration
 
-**Aliyun Maven mirror** is configured in `settings.gradle.kts`:
-- `https://maven.aliyun.com/repository/public` (main)
-- `https://maven.aliyun.com/repository/google`
-- `https://maven.aliyun.com/repository/gradle-plugin`
-
-### TV-Specific Configuration
-
-- **Launcher**: Leanback launcher intent filter in AndroidManifest.xml
-- **Theme**: android:Theme.Black (fallback; Theme.Leanback is runtime-only on TV devices)
+- **Launcher**: Leanback intent filter in AndroidManifest.xml
+- **Theme**: android:Theme.Black (Theme.Leanback is runtime-only on TV devices)
 - **Remote Control**: D-pad navigation via Compose focusable components
 
 ## Responsibilities
@@ -95,42 +92,24 @@ tvlive/
 ## Boundaries
 
 ### Ask First
-
-- New dependencies (especially media playback libraries)
+- New dependencies (media playback libraries)
 - Architecture changes (MVVM, navigation graph)
 - Native code or platform channels
 
 ### Never Do
-
 - Hardcode API keys or credentials
 - Commit sensitive data to version control
-- Use mobile-specific UI patterns (touch-first design)
+- Use mobile-specific UI (touch-first design)
 
 ## Quality Checklist
 
-- [x] APK builds successfully (`./gradlew assembleDebug`) — verified 2026-04-12
-- [x] Tests pass (`./gradlew test`) — verified 2026-04-12
-- [x] Lint passes (`./gradlew lint`) — verified 2026-04-12
+- [x] APK builds successfully — verified 2026-04-12
+- [x] Tests pass — verified 2026-04-12
+- [x] Lint passes — verified 2026-04-12
 - [x] Leanback launcher intent filter present
-- [ ] Remote control navigation works (requires physical TV device)
 
-## OpenCode Sisyphus Protocol
+## Common Issues
 
-- Use plan-based execution for multi-step tasks
-- Decompose plan items into granular, verifiable sub-tasks
-- Verify with diagnostics and build/test evidence
-- Never commit without explicit user request
-
-## Development Notes
-
-### Build Environment
-
-- Requires Android SDK at `$ANDROID_HOME` or `/home/al/Android/Sdk`
-- Java 17+ required
-- Maven mirror (Aliyun) configured for China network access
-
-### Common Issues
-
-- **Theme.Leanback not found**: Use `android:Theme.Black` as parent in themes.xml (Theme.Leanback is runtime-only on actual TV devices)
-- **TvMaterialTheme unresolved**: Currently not used — basic Compose theming works without it
+- **Theme.Leanback not found**: Use `android:Theme.Black` in themes.xml (Theme.Leanback runtime-only on actual TV devices)
+- **TvMaterialTheme unresolved**: Not used — basic Compose theming works without it
 - **Compose TV alpha APIs**: Use OptIn annotations for experimental TV foundation APIs
