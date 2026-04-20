@@ -112,7 +112,8 @@ private fun HomeHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .background(TvliveColors.BackgroundPrimary)
+            .padding(horizontal = 20.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -132,8 +133,10 @@ private fun HomeHeader() {
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Text(
-                        text = "🔍",
-                        fontSize = 18.sp
+                        text = "Search",
+                        color = TvliveColors.TextPrimary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
@@ -146,9 +149,10 @@ private fun HomeHeader() {
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Text(
-                        text = "☰",
+                        text = "Menu",
                         color = TvliveColors.TextPrimary,
-                        fontSize = 20.sp
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
