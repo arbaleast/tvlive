@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import androidx.compose.ui.graphics.painter.ColorPainter
 
-private const val KenBurnsScaleEnd = 1.08f
-private const val KenBurnsDurationMs = 8000
+private const val KenBurnsScaleEnd = 1.02f
+private const val KenBurnsDurationMs = 20000
 
 @Composable
 fun HeroBanner(
@@ -58,7 +58,7 @@ fun HeroBanner(
     )
     val offsetX by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 40f,
+        targetValue = 10f,
         animationSpec = infiniteRepeatable(
             animation = tween(KenBurnsDurationMs, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
@@ -66,16 +66,7 @@ fun HeroBanner(
         label = "kbOffsetX"
     )
 
-    // Animate content fade-in on load
-    val contentAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.7f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(5000),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "contentAlpha"
-    )
+    val contentAlpha = 1f  // No animation
 
     Box(
         modifier = modifier
@@ -206,7 +197,7 @@ private fun HeroButton(
 ) {
     val scale by animateFloatAsState(
         targetValue = if (isFocused) 1.05f else 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+        animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy, stiffness = Spring.StiffnessHigh),
         label = "buttonScale"
     )
 

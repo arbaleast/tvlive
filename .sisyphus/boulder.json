@@ -1,12 +1,12 @@
 {
-  "active_plan": "/vol1/1000/projects/tvlive/.sisyphus/plans/fix-ui-navigation.md",
-  "started_at": "2026-04-20T13:43:12.941Z",
+  "active_plan": "/vol1/1000/projects/tvlive/.sisyphus/plans/performance-optimization.md",
+  "started_at": "2026-04-20T23:53:11.417Z",
   "session_ids": [
     "ses_25577f00cffeOxIe0Yd6Z7pNxO"
   ],
   "session_origins": {
     "ses_25577f00cffeOxIe0Yd6Z7pNxO": "direct"
   },
-  "plan_name": "fix-ui-navigation",
+  "plan_name": "performance-optimization",
   "agent": "atlas"
 }

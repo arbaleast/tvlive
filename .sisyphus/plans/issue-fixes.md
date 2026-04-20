@@ -4,23 +4,23 @@
 
 ### 🚨 高优先级
 
-- [ ] 1. **BrowseViewModel catalogId BUG** - catalogId 参数被忽略，目录切换不工作
-- [ ] 2. **PlayerManager 缺少测试** - 媒体播放核心模块没有单元测试
+- [x] 1. **BrowseViewModel catalogId BUG** - catalogId 参数被忽略，目录切换不工作
+- [x] 2. **PlayerManager 缺少测试** - 媒体播放核心模块没有单元测试
 
 ### ⚠️ 中优先级
 
-- [ ] 3. **AppError 未被使用** - sealed class 定义了但 ViewModels 未使用
-- [ ] 4. **DpadFocusable 已废弃** - 但仍在 HomeScreen 等处使用
-- [ ] 5. **AGENTS.md 版本过时** - Compose Compiler 记录为 1.5.4，实际是 1.5.10
+- [x] 3. **AppError 未被使用** - sealed class 定义了但 ViewModels 未使用 (保留决策)
+- [x] 4. **DpadFocusable 已废弃** - 但仍在 HomeScreen 等处使用
+- [x] 5. **AGENTS.md 版本过时** - Compose Compiler 记录为 1.5.4，实际是 1.5.10
 
 ### 💡 低优先级
 
-- [ ] 6. **SearchViewModel 内存效率** - 将所有内容加载到内存
-- [ ] 7. **HomeScreen emoji 无障碍** - 硬编码 emoji 字符
+- [x] 6. **SearchViewModel 内存效率** - 将所有内容加载到内存 (保留决策)
+- [x] 7. **HomeScreen emoji 无障碍** - 硬编码 emoji 字符
 
 ---
 
-## 1. BrowseViewModel catalogId BUG ✅
+## 1. BrowseViewModel catalogId BUG ✅ (已完成)
 
 **问题**: `loadCatalog()` 接收 `catalogId` 参数但完全忽略（因为只有一个 catalog: "default"）
 
@@ -47,7 +47,7 @@
 
 ---
 
-## 2. PlayerManager 测试
+## 2. PlayerManager 测试 ✅ (已完成)
 
 **问题**: 媒体播放核心模块没有单元测试
 
@@ -62,7 +62,7 @@
 
 ---
 
-## 3. AppError 未被使用
+## 3. AppError 未被使用 ✅ (已完成 - 保留决策)
 
 **问题**: AppError sealed class 定义了但 ViewModels 使用 String
 
@@ -72,7 +72,7 @@
 
 ---
 
-## 4. DpadFocusable 已废弃
+## 4. DpadFocusable 已废弃 ✅ (已完成)
 
 **问题**: DpadFocusable 已标记废弃但仍在使用
 
@@ -82,7 +82,7 @@
 
 ---
 
-## 5. AGENTS.md 版本过时
+## 5. AGENTS.md 版本过时 ✅ (已完成)
 
 **问题**: Compose Compiler 记录为 1.5.4，实际是 1.5.10
 
@@ -92,7 +92,7 @@
 
 ---
 
-## 6. SearchViewModel 内存效率
+## 6. SearchViewModel 内存效率 ✅ (已完成 - 保留决策)
 
 **问题**: 将所有内容加载到内存进行搜索
 
@@ -102,7 +102,7 @@
 
 ---
 
-## 7. HomeScreen emoji 无障碍
+## 7. HomeScreen emoji 无障碍 ✅ (已完成)
 
 **问题**: 硬编码 emoji 字符 (🔍 ☰)
 

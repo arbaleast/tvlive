@@ -66,13 +66,13 @@ fun NetflixCard(
 
     val glowAlpha by animateFloatAsState(
         targetValue = if (isFocused) 1f else 0f,
-        animationSpec = tween(300),
+        animationSpec = tween(800),
         label = "glowAlpha"
     )
 
     val elevation by animateDpAsState(
         targetValue = if (isFocused) FocusElevation else 4.dp,
-        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        animationSpec = spring(stiffness = Spring.StiffnessHigh),
         label = "elevation"
     )
 
