@@ -1,0 +1,120 @@
+name: Visual Regression
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**.kt'
+      - '**.kts'
+      - '.github/workflows/visual.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.kt'
+      - '**.kts'
+      - '.github/workflows/visual.yml'
+  # Manual trigger for baseline capture
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode'
+        required: true
+        default: 'compare'
+        type: choice
+        options:
+          - compare
+          - capture
+
+env:
+  ANDROID_HOME: /opt/android-sdk
+  ANDROID_SDK_ROOT: /opt/android-sdk
+
+jobs:
+  visual-test:
+    runs-on: ubuntu-latest
+    # Instrumented tests require an emulator — must run on ubuntu with emulator
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Create avd
+        uses: android-actions/create-avd@v2
+        with:
+          avd-name: tv-test
+          sdk-root: ${{ env.ANDROID_HOME }}
+          package: 'system-images;android-34;google_apis;x86_64'
+          # TV: 1080p landscape
+          extra: '--device "tv1080p"'
+
+      - name: Start emulator
+        uses: android-actions/start-emulator@v2
+        with:
+          avd-name: tv-test
+          sdk-root: ${{ env.ANDROID_HOME }}
+
+      - name: Wait for emulator boot
+        run: |
+          # Wait max 300s for boot
+          for i in $(seq 1 60); do
+            bootanim=$(adb shell getprop init.svc.bootanim 2>/dev/null | tr -d '\r')
+            if [ "$bootanim" = "stopped" ]; then
+              echo "Emulator booted"
+              break
+            fi
+            sleep 5
+          done
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Capture baselines
+        if: github.event.inputs.mode == 'capture' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'capture')
+        env:
+          RUN_ROBORAZZI_BASELINE: "1"
+          ANDROID_EMULATOR: tv-test
+        run: |
+          ./gradlew :app:connectedAndroidTest \
+            --no-daemon \
+            -PtestInstrumentationRunnerArguments.androidx.test.runner.Arguments=--no-window-soft-input-mode
+
+      - name: Run visual comparison
+        if: github.event.inputs.mode != 'capture'
+        env:
+          ANDROID_EMULATOR: tv-test
+        run: |
+          ./gradlew :app:connectedAndroidTest \
+            --no-daemon \
+            -PtestInstrumentationRunnerArguments.androidx.test.runner.Arguments=--no-window-soft-input-mode
+
+      - name: Upload Roborazzi report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roborazzi-report
+          path: app/build/reports/roborazzi/
+
+      - name: Upload baseline screenshots
+        if: github.event.inputs.mode == 'capture' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'capture')
+        uses: actions/upload-artifact@v4
+        with:
+          name: roborazzi-baseline
+          path: baseline/
+
+      # Commit new baselines if capture was run
+      - name: Commit baseline screenshots
+        if: github.event.inputs.mode == 'capture' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'capture')
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add baseline/
+          git diff --staged --quiet || git commit -m "chore: capture new visual baselines"
+          git push

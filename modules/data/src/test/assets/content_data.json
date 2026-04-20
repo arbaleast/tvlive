@@ -1,0 +1,22 @@
+{
+  "categories": [
+    {
+      "name": "TestCategory",
+      "items": [
+        {
+          "id": "tc1",
+          "title": "Test Item 1",
+          "description": "Test description",
+          "thumbnailUrl": "http://example.com/thumb1.jpg",
+          "backdropUrl": "http://example.com/backdrop1.jpg",
+          "videoUrl": "http://example.com/video1.mp4",
+          "category": "TestCategory",
+          "releaseYear": 2024,
+          "rating": "G",
+          "duration": "90m",
+          "isLive": false
+        }
+      ]
+    }
+  ]
+}
