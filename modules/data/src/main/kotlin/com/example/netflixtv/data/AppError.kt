@@ -1,8 +1,5 @@
 package com.example.netflixtv.data
 
-/**
- * Standardized error type across the app.
- */
 sealed class AppError(message: String) : Throwable(message) {
     data class Network(override val message: String) : AppError(message)
     data class Parse(override val message: String) : AppError(message)

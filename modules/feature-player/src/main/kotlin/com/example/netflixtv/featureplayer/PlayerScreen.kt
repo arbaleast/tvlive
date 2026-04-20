@@ -36,7 +36,6 @@ import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import com.example.netflixtv.data.AppConstants
 import com.example.netflixtv.media.PlayerManager
-import com.example.netflixtv.uicommon.DpadFocusable
 import com.example.netflixtv.uicommon.TvliveColors
 import androidx.compose.ui.graphics.painter.ColorPainter
 import kotlinx.coroutines.delay
@@ -161,18 +160,13 @@ fun PlayerScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                DpadFocusable(
-                    cornerRadius = 8.dp,
-                    focusBorderColor = TvliveColors.FocusBorder
-                ) {
-                    GlassButton(onClick = onBackClick) {
-                        Text(
-                            text = "\u2190 Back",
-                            color = TvliveColors.TextPrimary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                GlassButton(onClick = onBackClick) {
+                    Text(
+                        text = "\u2190 Back",
+                        color = TvliveColors.TextPrimary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
 
                 Text(
@@ -445,12 +439,23 @@ private fun GlassButton(
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+
     androidx.compose.material3.Button(
         onClick = onClick,
         colors = androidx.compose.material3.ButtonDefaults.buttonColors(
             containerColor = TvliveColors.BackgroundElevated.copy(alpha = 0.7f)
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.then(
+            if (isFocused) Modifier.border(
+                2.dp,
+                TvliveColors.FocusBorder,
+                RoundedCornerShape(8.dp)
+            ) else Modifier
+        ),
+        interactionSource = interactionSource
     ) {
         content()
     }

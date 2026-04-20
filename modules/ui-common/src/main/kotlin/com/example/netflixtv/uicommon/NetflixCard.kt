@@ -1,6 +1,7 @@
 package com.example.netflixtv.uicommon
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
@@ -11,9 +12,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +39,7 @@ import com.example.netflixtv.data.Content
 private val FocusScale = 1.1f
 private val FocusElevation = 16.dp
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NetflixCard(
     content: Content,
@@ -42,6 +48,11 @@ fun NetflixCard(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
+    LaunchedEffect(isFocused) {
+        if (isFocused) bringIntoViewRequester.bringIntoView()
+    }
 
     // Use @Stable for animation state to reduce recompositions
     val scale by animateFloatAsState(
@@ -67,6 +78,7 @@ fun NetflixCard(
 
     Card(
         modifier = modifier
+            .bringIntoViewRequester(bringIntoViewRequester)
             .width(160.dp)
             .height(240.dp)
             .scale(scale)

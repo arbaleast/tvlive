@@ -2,7 +2,7 @@ package com.example.netflixtv.featuresearch
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -19,12 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.netflixtv.data.Content
 import com.example.netflixtv.uicommon.NetflixCard
+import com.example.netflixtv.uicommon.TvliveColors
 
 @Composable
 fun SearchScreen(
@@ -38,7 +38,7 @@ fun SearchScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(TvliveColors.BackgroundPrimary)
             .padding(16.dp)
     ) {
         Column(
@@ -52,13 +52,13 @@ fun SearchScreen(
             ) {
                 Text(
                     text = "Search",
-                    color = Color.White,
+                    color = TvliveColors.TextPrimary,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "← Back",
-                    color = Color.Gray,
+                    color = TvliveColors.TextSecondary,
                     fontSize = 16.sp,
                     modifier = Modifier.clickable { onBackClick() }
                 )
@@ -71,17 +71,17 @@ fun SearchScreen(
                     .fillMaxWidth()
                     .focusRequester(inputFocusRequester),
                 placeholder = {
-                    Text("Search titles...", color = Color.Gray)
+                    Text("Search titles...", color = TvliveColors.TextTertiary)
                 },
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    focusedContainerColor = Color.DarkGray,
-                    unfocusedContainerColor = Color.DarkGray,
-                    cursorColor = Color.Red,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    focusedTextColor = TvliveColors.TextPrimary,
+                    unfocusedTextColor = TvliveColors.TextPrimary,
+                    focusedContainerColor = TvliveColors.BackgroundElevated,
+                    unfocusedContainerColor = TvliveColors.BackgroundSecondary,
+                    cursorColor = TvliveColors.Primary,
+                    focusedIndicatorColor = TvliveColors.Primary,
+                    unfocusedIndicatorColor = TvliveColors.BackgroundElevated
                 )
             )
 
@@ -90,12 +90,12 @@ fun SearchScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color.Red)
+                    CircularProgressIndicator(color = TvliveColors.Primary)
                 }
             } else if (uiState.query.isNotBlank()) {
                 Text(
                     text = "${uiState.results.size} results",
-                    color = Color.Gray,
+                    color = TvliveColors.TextSecondary,
                     fontSize = 14.sp
                 )
 
@@ -106,7 +106,7 @@ fun SearchScreen(
                     ) {
                         Text(
                             text = "No results found",
-                            color = Color.Gray,
+                            color = TvliveColors.TextSecondary,
                             fontSize = 18.sp
                         )
                     }
