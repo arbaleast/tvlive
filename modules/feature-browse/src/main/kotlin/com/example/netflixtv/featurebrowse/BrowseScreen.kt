@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.netflixtv.data.Category
 import com.example.netflixtv.data.Content
-import com.example.netflixtv.uicommon.DpadFocusable
 import com.example.netflixtv.uicommon.NetflixCard
 import com.example.netflixtv.uicommon.TvliveColors
 
@@ -115,15 +114,7 @@ private fun BrowseHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            DpadFocusable(cornerRadius = 10.dp, focusBorderColor = TvliveColors.Primary) {
-                Box(
-                    modifier = Modifier
-                        .clickable { onBackClick() }
-                        .padding(10.dp)
-                ) {
-                    Text(text = "← Back", color = TvliveColors.TextSecondary, fontSize = 16.sp)
-                }
-            }
+            BackButton(onBackClick = onBackClick)
 
             Text(
                 text = "Browse",
@@ -146,6 +137,29 @@ private fun BrowseHeader(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun BackButton(onBackClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+
+    Box(
+        modifier = Modifier
+            .then(
+                if (isFocused) Modifier.border(
+                    2.dp,
+                    TvliveColors.Primary,
+                    RoundedCornerShape(10.dp)
+                ) else Modifier
+            )
+            .clip(RoundedCornerShape(10.dp))
+            .focusable(interactionSource = interactionSource)
+            .clickable { onBackClick() }
+            .padding(10.dp)
+    ) {
+        Text(text = "← Back", color = TvliveColors.TextSecondary, fontSize = 16.sp)
     }
 }
 
@@ -215,16 +229,7 @@ private fun BrowseCategoryRow(
                 fontWeight = FontWeight.SemiBold
             )
 
-            DpadFocusable(cornerRadius = 6.dp, focusBorderColor = TvliveColors.Primary) {
-                Box(modifier = Modifier.padding(6.dp)) {
-                    Text(
-                        text = "See All (${category.items.size})",
-                        color = TvliveColors.Primary.copy(alpha = 0.8f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
+            SeeAllButton(category = category)
         }
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -241,5 +246,32 @@ private fun BrowseCategoryRow(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SeeAllButton(category: Category) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+
+    Box(
+        modifier = Modifier
+            .then(
+                if (isFocused) Modifier.border(
+                    2.dp,
+                    TvliveColors.Primary,
+                    RoundedCornerShape(6.dp)
+                ) else Modifier
+            )
+            .clip(RoundedCornerShape(6.dp))
+            .focusable(interactionSource = interactionSource)
+            .padding(6.dp)
+    ) {
+        Text(
+            text = "See All (${category.items.size})",
+            color = TvliveColors.Primary.copy(alpha = 0.8f),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }

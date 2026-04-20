@@ -38,6 +38,7 @@ import com.example.netflixtv.data.AppConstants
 import com.example.netflixtv.media.PlayerManager
 import com.example.netflixtv.uicommon.TvliveColors
 import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.delay
 
 private val ControlsHideDelayMs = 4000L
@@ -297,7 +298,14 @@ private fun ProgressBar(
         modifier = Modifier
             .fillMaxWidth()
             .focusable(interactionSource = interactionSource)
-            .clickable { onSeek((duration * 0.5f).toLong()) }
+            .pointerInput(duration) {
+    awaitPointerEventScope {
+        val position = awaitPointerEvent().changes.first().position
+        val width = size.width.toFloat()
+        val fraction = (position.x / width).coerceIn(0f, 1f)
+        onSeek((duration * fraction.toLong()))
+    }
+}
             .padding(vertical = 8.dp)
     ) {
         // Track
@@ -400,7 +408,7 @@ private fun PlayPauseButton(
             .then(
                 if (isFocused) Modifier.border(
                     2.5.dp,
-                    Color.White,
+                    TvliveColors.FocusBorder,
                     RoundedCornerShape(12.dp)
                 ) else Modifier
             )

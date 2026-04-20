@@ -1,17 +1,23 @@
 package com.example.netflixtv.featuresearch
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -56,20 +62,36 @@ fun SearchScreen(
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                // Issue 1: Back button missing focusable - Added MutableInteractionSource pattern
+                val backInteractionSource = remember { MutableInteractionSource() }
+                val isBackFocused by backInteractionSource.collectIsFocusedAsState()
+                val backBorderColor = if (isBackFocused) TvliveColors.Primary else TvliveColors.TextTertiary
+
                 Text(
                     text = "← Back",
-                    color = TvliveColors.TextSecondary,
+                    color = if (isBackFocused) TvliveColors.Primary else TvliveColors.TextSecondary,
                     fontSize = 16.sp,
-                    modifier = Modifier.clickable { onBackClick() }
+                    modifier = Modifier
+                        .border(
+                            width = if (isBackFocused) 1.dp else 0.dp,
+                            color = backBorderColor,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .focusable(interactionSource = backInteractionSource)
+                        .clickable { onBackClick() }
                 )
             }
 
+            // Issue 2: TextField missing focusable - Added .focusable() modifier
             TextField(
                 value = uiState.query,
                 onValueChange = { viewModel.onQueryChange(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(inputFocusRequester),
+                    .focusRequester(inputFocusRequester)
+                    .focusable(),
                 placeholder = {
                     Text("Search titles...", color = TvliveColors.TextTertiary)
                 },
