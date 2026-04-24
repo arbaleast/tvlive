@@ -3,7 +3,6 @@ package com.example.netflixtv.media
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.os.Trace
 import android.util.Log
 import com.example.netflixtv.media.R
 import androidx.media3.common.MediaItem

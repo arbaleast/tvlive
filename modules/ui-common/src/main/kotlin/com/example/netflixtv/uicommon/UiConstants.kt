@@ -20,7 +20,6 @@ object UiConstants {
         val SPACING_M: Dp = 16.dp
         val ROUNDED_MD: Dp = 8.dp
 
-        const val GRADIENT_HEIGHT_TOP = 120
         const val SEEK_FORWARD_MS = 10_000L
         const val SEEK_BACKWARD_MS = 10_000L
         const val PLAYBACK_CONTROLS_BUTTON_SPACING = 24
