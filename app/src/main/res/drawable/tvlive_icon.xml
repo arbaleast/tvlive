@@ -3,10 +3,12 @@
     android:height="180dp"
     android:viewportWidth="320"
     android:viewportHeight="180">
+    <!-- Netflix Red Background -->
+    <path
+        android:fillColor="#E50914"
+        android:pathData="M0,0h320v180h-320z"/>
+    <!-- White N Letter - Netflix style -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M160,90m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0"/>
-    <path
-        android:fillColor="#000000"
-        android:pathData="M150,75l30,15l-30,15z"/>
+        android:pathData="M85,135V45h25l25,60 25,-60h25v90h-22v-55l-22,55h-14l-22,-55v55z"/>
 </vector>

@@ -25,9 +25,6 @@ include(
     ":modules:media",
     ":modules:ui-common",
     ":modules:feature-home",
-    ":modules:feature-browse",
-    ":modules:feature-detail",
     ":modules:feature-player",
-    ":modules:feature-search",
     ":app"
 )

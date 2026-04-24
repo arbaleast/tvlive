@@ -1,11 +1,12 @@
 package com.example.netflixtv.featurehome
 
-import com.example.netflixtv.data.Category
-import com.example.netflixtv.data.Content
+data class ChannelItem(
+    val id: String,
+    val title: String,
+    val thumbnailUrl: String = ""
+)
 
 data class HomeUiState(
-    val categories: List<Category> = emptyList(),
-    val heroes: List<Content> = emptyList(),
-    val isLoading: Boolean = true,
-    val error: String? = null
+    val channels: List<ChannelItem> = emptyList(),
+    val isLoading: Boolean = true
 )
