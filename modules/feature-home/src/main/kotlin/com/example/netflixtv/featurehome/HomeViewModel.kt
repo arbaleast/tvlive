@@ -2,6 +2,7 @@ package com.example.netflixtv.featurehome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.netflixtv.data.ChannelDefinitions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,10 +23,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private fun loadChannels() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val channels = listOf(
-                ChannelItem(id = "cctv1", title = "CCTV-1 综合"),
-                ChannelItem(id = "cctv2", title = "CCTV-2 财经")
-            )
+            val channels = ChannelDefinitions.ALL.map { ch ->
+                ChannelItem(id = ch.id, title = ch.title)
+            }
             _uiState.value = HomeUiState(channels = channels, isLoading = false)
         }
     }

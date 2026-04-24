@@ -26,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.netflixtv.data.ChannelDefinitions
 import com.example.netflixtv.data.StreamRepository
 import com.example.netflixtv.featurehome.HomeScreen
 import com.example.netflixtv.featurehome.HomeViewModel
@@ -93,7 +94,7 @@ fun AppNav(
                 resolvedVideoUrl != null -> {
                     PlayerScreenRefactored(
                         videoUrl = resolvedVideoUrl!!,
-                        title = if (contentId == "cctv1") "CCTV-1 综合" else "CCTV-2 财经",
+                        title = ChannelDefinitions.find(contentId)?.title ?: contentId,
                         onBackClick = { navController.popBackStack() },
                         playerManager = playerManager,
                         onPipClick = onPipClick
